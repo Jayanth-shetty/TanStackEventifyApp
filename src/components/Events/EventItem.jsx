@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 
 export default function EventItem({ event }) {
+  
   const formattedDate = new Date(event.date).toLocaleDateString('en-US', {
     day: 'numeric',
     month: 'short',
