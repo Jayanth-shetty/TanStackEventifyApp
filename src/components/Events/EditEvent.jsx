@@ -74,7 +74,7 @@ export default function EditEvent() {
   if (data) {
     content = (
       <EventForm inputData={data} onSubmit={handleSubmit}>
-        {state==='submitting'?<p>Submitting data......</p>:<><Link to="../" className="button-text">
+        {state==='submitting'?<><p>Submitting data......</p><progress /></>:<><Link to="../" className="button-text">
           Cancel
         </Link>
         <button type="submit" className="button">
