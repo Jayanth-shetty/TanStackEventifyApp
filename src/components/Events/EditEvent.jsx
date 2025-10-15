@@ -1,5 +1,12 @@
-import { Link, redirect, useNavigate, useNavigation, useParams, useSubmit } from "react-router-dom";
-import {  useQuery } from "@tanstack/react-query";
+import {
+  Link,
+  redirect,
+  useNavigate,
+  useNavigation,
+  useParams,
+  useSubmit,
+} from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { fetchEvent, updateEvent, queryClient } from "../../util/http.js";
 
 import Modal from "../UI/Modal.jsx";
@@ -8,14 +15,15 @@ import EventForm from "./EventForm.jsx";
 import ErrorBlock from "../UI/ErrorBlock.jsx";
 
 export default function EditEvent() {
-  const {state}=useNavigation();
-  const submit=useSubmit();
+  const { state } = useNavigation();
+  const submit = useSubmit();
   const params = useParams();
   const navigate = useNavigate();
 
   const { data, isError, error } = useQuery({
     queryKey: ["events", params.id],
     queryFn: ({ signal }) => fetchEvent({ id: params.id, signal }),
+    staleTime: 10000,
   });
 
   // const { mutate } = useMutation({
@@ -36,7 +44,7 @@ export default function EditEvent() {
   // });
 
   function handleSubmit(formData) {
-    submit(formData,{method:'PUT'})
+    submit(formData, { method: "PUT" });
   }
 
   function handleClose() {
@@ -74,12 +82,21 @@ export default function EditEvent() {
   if (data) {
     content = (
       <EventForm inputData={data} onSubmit={handleSubmit}>
-        {state==='submitting'?<><p>Submitting data......</p><progress /></>:<><Link to="../" className="button-text">
-          Cancel
-        </Link>
-        <button type="submit" className="button">
-          Update
-        </button></>}
+        {state === "submitting" ? (
+          <>
+            <p>Submitting data......</p>
+            <progress />
+          </>
+        ) : (
+          <>
+            <Link to="../" className="button-text">
+              Cancel
+            </Link>
+            <button type="submit" className="button">
+              Update
+            </button>
+          </>
+        )}
       </EventForm>
     );
   }
@@ -87,18 +104,17 @@ export default function EditEvent() {
   return <Modal onClose={handleClose}>{content && content}</Modal>;
 }
 
-
-export function loader({params}){
+export function loader({ params }) {
   return queryClient.fetchQuery({
     queryKey: ["events", params.id],
     queryFn: ({ signal }) => fetchEvent({ id: params.id, signal }),
-  })
+  });
 }
 
-export async function action({request,params}){
- const formData=await request.formData();
- const updatedData=Object.fromEntries(formData);
- await updateEvent({id:params.id,event:updatedData})
- await queryClient.invalidateQueries(['events']);
- return redirect('../')
+export async function action({ request, params }) {
+  const formData = await request.formData();
+  const updatedData = Object.fromEntries(formData);
+  await updateEvent({ id: params.id, event: updatedData });
+  await queryClient.invalidateQueries(["events"]);
+  return redirect("../");
 }
