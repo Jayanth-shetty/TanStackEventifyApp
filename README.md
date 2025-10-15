@@ -1,4 +1,4 @@
-# React + Vite
+# React + Vite and node
 
 #used dummy backend
 
@@ -31,7 +31,6 @@ Eventify allows users to browse, create, edit, and manage events in real time wi
 
    💅 CSS — Styling
 
-   🖥️ JSON Server / Local Mock API (for testing)
 
 # installation 
 
